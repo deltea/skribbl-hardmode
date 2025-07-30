@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #E6CEAC;
+  --color-primary: #aa916d;
+  --color-secondary: #d2b790;
+  --color-text: #534839;
+  --border-width-3: 3px;
+}
+
+.grid-background {
+  background-size: 40px 40px;
+  background-position: 20px 20px;
+  background-image:
+    linear-gradient(to right, var(--color-secondary) 3px, transparent 1px),
+    linear-gradient(to bottom, var(--color-secondary) 3px, transparent 1px);
+}
+
+body {
+  @apply bg-bg text-text;
+}
