@@ -1,12 +1,19 @@
 <script lang="ts">
   import { onMount } from "svelte";
+  import P5, { type Sketch } from "p5-svelte";
+  import { animate } from "animejs";
 
   const colors = ["red", "blue", "green", "yellow", "purple", "orange", "pink", "brown", "gray", "lightgray", "black", "white"];
   const numbers = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"];
 
   let transcriptElement: HTMLElement;
+  let canvas: HTMLCanvasElement;
+  let canvasContainer: HTMLDivElement;
+
   let currentSpeech = "click to start";
   let processedSpeech: string[];
+  let penPosition = { x: 0, y: 0 };
+  let lastPenPosition = { x: 0, y: 0 };
   let currentState = {
     color: "red",
     penDown: true,
@@ -30,6 +37,8 @@
         // move pen
         if (+processedSpeech[0] && processedSpeech.length >= 2) {
           // move pen [0]px in direction of [1]
+          lastPenPosition = { ...currentState.position };
+
           const distance = +processedSpeech[0];
           const direction = processedSpeech[1];
           if (direction === "up") {
@@ -43,6 +52,11 @@
           } else {
             console.warn("unrecognized direction:", direction);
           }
+
+          animate(penPosition, {
+            x: currentState.position.x,
+            y: currentState.position.y
+          });
         } else if (processedSpeech[0] === "start") {
           // start drawing
           currentState.penDown = true;
@@ -79,6 +93,27 @@
     });
   });
 
+  const sketch: Sketch = (p5) => {
+    let width;
+    let height;
+
+    p5.setup = () => {
+      width = canvasContainer.clientWidth;
+      height = canvasContainer.clientHeight;
+
+      p5.createCanvas(width, height, p5.WEBGL, canvas);
+
+      currentState.position = { x: 0, y: 0 };
+    };
+
+    p5.draw = () => {
+      p5.stroke(currentState.color);
+      p5.strokeWeight(currentState.size);
+      p5.line(lastPenPosition.x, lastPenPosition.y, penPosition.x, penPosition.y);
+    };
+  };
+
+
   function convertToNumber(text: string): string {
     if (numbers.includes(text)) {
       return numbers.indexOf(text).toString();
@@ -86,6 +121,8 @@
       return text;
     }
   }
+
+  const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
 </script>
 
 <main class="h-full flex gap-8 p-8">
@@ -127,8 +164,11 @@
     </div>
   </div>
 
-  <div class="flex flex-col gap-8 h-full grow">
-    <canvas class="border-3 border-primary bg-white rounded-xl p-8 w-full grow drop-shadow-xl"></canvas>
+  <div class="flex flex-col gap-8 h-full grow items-center">
+    <div bind:this={canvasContainer} class="border-3 border-primary bg-white rounded-xl p8 drop-shadow-xl grow w-full">
+      <canvas bind:this={canvas} class="rounded-xl"></canvas>
+      <P5 {sketch} />
+    </div>
 
     <div class="flex justify-center items-center h-24 w-full">
       <h2 bind:this={transcriptElement} class="font-bold text-primary text-5xl underline underline-offset-[12px]">

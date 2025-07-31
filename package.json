@@ -30,7 +30,10 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
+		"@types/p5": "^1.7.6",
+		"animejs": "^4.1.2",
 		"iconify-icon": "^3.0.0",
-		"openai-whisper": "^1.0.2"
+		"openai-whisper": "^1.0.2",
+		"p5-svelte": "^3.1.2"
 	}
 }
