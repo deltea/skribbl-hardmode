@@ -96,6 +96,11 @@
             currentState.position = { x: 0, y: 0 };
             lastPenPosition = { x: 0, y: 0 };
             penPosition = { x: 0, y: 0 };
+            animate(penElement, {
+              translateX: currentState.position.x,
+              translateY: currentState.position.y,
+              duration: 500,
+            });
           } else if (colors.includes(processedSpeech.join(""))) {
             // change color to [0]
             currentState.color = processedSpeech.join("");
