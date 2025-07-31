@@ -30,6 +30,7 @@
 		"vite": "^7.0.4"
 	},
 	"dependencies": {
-		"iconify-icon": "^3.0.0"
+		"iconify-icon": "^3.0.0",
+		"openai-whisper": "^1.0.2"
 	}
 }
