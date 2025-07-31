@@ -109,17 +109,21 @@
       }
       recognition.onstart = () => {
         console.log("speech recognition started");
-        // transcriptElement.textContent = "listening...";
+        currentSpeech = "listening...";
       };
       recognition.onerror = (e: any) => {
         console.error("speech recognition error:", e);
       };
       recognition.onend = () => {
         console.log("speech recognition ended");
-        recognition.start();
+        setTimeout(() => {
+          recognition.start();
+        }, 1000);
       };
 
-      transcriptElement.addEventListener("click", () => recognition.start());
+      transcriptElement.addEventListener("click", () => {
+        recognition.start()
+      });
 
       p5.createCanvas(width, height, p5.WEBGL, canvas);
 
